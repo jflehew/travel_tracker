@@ -2,6 +2,8 @@ Welcome To Travel Tracker:
 
 This is a small duo project meant as the capstone for a web development program at Coding Dojo
 
+Github Link: https://github.com/jflehew/travel_tracker
+
 This project is a collaboration between Nathan Taylor and John Lehew
 
 Project Features:
