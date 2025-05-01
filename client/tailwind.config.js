@@ -7,13 +7,13 @@ export default {
   theme: {
     extend: {
       boxShadow: {
-        metallic: '0 4px 6px -1px rgba(192,192,192,0.2), 0 2px 4px -2px rgba(192,192,192,0.1)',
+        metallic: '3px 6px 6px 3px rgba(192,192,192,0.4), 0 2px 4px -2px rgba(192,192,192,0.4)',
         deep: '0 4px 8px rgba(42, 52, 57, 0.6)',
       },
       textShadow: {
     sm: '1px 1px 2px rgba(192, 192, 192, 0.2)',           // soft silver highlight
     DEFAULT: '2px 2px 4px rgba(192, 192, 192, 0.35)',      // more prominent silver glow
-    lg: '3px 3px 6px rgba(42, 52, 57, 0.4)',               // deep iron-toned shadow
+    lg: '3px 3px 6px rgba(192, 192, 192, 0.5)',               // deep iron-toned shadow
   },
       colors: {
         metallic: {
@@ -42,7 +42,7 @@ export default {
           textShadow: '2px 2px 4px rgba(192, 192, 192, 0.35)',
         },
         '.text-shadow-lg': {
-          textShadow: '3px 3px 6px rgba(42, 52, 57, 0.4)',
+          textShadow: '3px 3px 6px rgba(192, 192, 192, 0.5)',
         },
         '.text-shadow-none': {
           textShadow: 'none',

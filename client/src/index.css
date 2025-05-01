@@ -3,3 +3,125 @@
 @tailwind components;
 @tailwind utilities;
 
+.header {
+  @apply
+  text-center
+  text-metallic-silver
+  text-shadow-lg
+  font-elegant
+  text-4xl
+  bg-metallic-navy
+  relative overflow-hidden
+  bg-gradient-to-t
+  from-metallic-black
+  to-metallic-iron;
+  background-blend-mode: lighten;
+}
+
+.background {
+  @apply
+  bg-metallic-navy
+  flex
+  justify-center
+  items-center
+  min-h-screen
+}
+
+.glossy {
+  @apply
+  relative overflow-hidden
+  bg-gradient-to-b
+  from-metallic-black
+  to-metallic-iron;
+  background-blend-mode: lighten;
+}
+
+.form-container {
+  @apply
+  font-modern
+  flex
+  flex-col
+  justify-center
+  items-center
+  border-[0.3vw]
+  border-metallic-silver
+  bg-metallic-forest
+  rounded-3xl
+  w-[45vw]
+  h-auto
+  p-4
+  shadow-metallic
+  text-metallic-silver
+}
+
+.form-container h2 {
+  @apply
+  text-4xl
+  text-shadow-lg
+  underline
+  m-2
+}
+
+.form-container form > div > label {
+  @apply
+  underline
+  w-full
+  font-bold
+  text-shadow
+  text-lg
+  m-2
+}
+
+.form-container form > div > label > input {
+  @apply
+  w-full
+  px-3
+  py-2
+  rounded-lg
+  border-4
+  shadow-deep
+  border-metallic-forest
+  bg-metallic-white
+  text-metallic-forest
+}
+
+.form-container form > div > label > input:focus {
+  @apply
+  border-4
+  border-metallic-iron
+}
+
+.error-container p {
+  @apply
+  text-orange-500
+  font-bold
+  text-xs
+  font-tech
+  text-shadow-sm
+  text-center
+  p-3
+}
+
+.form-container form > button {
+  @apply
+  flex
+  bg-metallic-white
+  justify-center
+  items-center
+  text-metallic-forest
+  font-bold
+  underline
+  text-xl
+  shadow-deep
+  rounded-md
+  py-3
+  px-8
+  m-4
+  mx-auto
+}
+
+
+
+
+
+
