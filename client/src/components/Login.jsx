@@ -56,7 +56,7 @@ export const Login = () => {
                             />
                         </label>
                     </div>
-                    <div className="error-container">
+                    <div className="error-container text-center">
                         {error && <p>{error}</p>}
                     </div>
                     <button type="submit">Login</button>

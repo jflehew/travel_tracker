@@ -10,12 +10,27 @@
   text-shadow-lg
   font-elegant
   text-4xl
+  pt-7
   bg-metallic-navy
   relative overflow-hidden
   bg-gradient-to-t
   from-metallic-black
   to-metallic-iron;
   background-blend-mode: lighten;
+}
+
+.nav-div {
+  @apply
+  flex
+  p-4
+  justify-center
+  text-2xl
+  text-metallic-white
+}
+
+.nav-link{
+  @apply
+  mx-6
 }
 
 .background {
@@ -98,7 +113,6 @@
   text-xs
   font-tech
   text-shadow-sm
-  text-center
   px-3
   pb-3
 }
