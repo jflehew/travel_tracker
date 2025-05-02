@@ -99,7 +99,8 @@
   font-tech
   text-shadow-sm
   text-center
-  p-3
+  px-3
+  pb-3
 }
 
 .form-container form > button {
