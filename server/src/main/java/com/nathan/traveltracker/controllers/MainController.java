@@ -34,8 +34,8 @@ public class MainController {
     //Add Trip Page
     @GetMapping("/trips/new")
     public String addBook( @ModelAttribute("newTrip") Trip newTrip,
-                           Model model,
-                           HttpSession session){
+                        Model model,
+                        HttpSession session){
 
         model.addAttribute("user", session.getAttribute("user"));
         //Return Home if Not Logged in.
@@ -48,9 +48,9 @@ public class MainController {
     //Create Trip Method
     @PostMapping("/trips/createTrip")
     public String addTrip(@Valid @ModelAttribute("newTrip")Trip newTrip,
-                          BindingResult result,
-                          Model model,
-                          HttpSession session){
+                        BindingResult result,
+                        Model model,
+                        HttpSession session){
 
         tripService.addTrip(newTrip, result);
         if(result.hasErrors()) {
@@ -65,9 +65,9 @@ public class MainController {
     //Trip Info
     @GetMapping("/trips/{tripId}")
     public String tripInfo(@PathVariable("tripId")Long tripId,
-                           @ModelAttribute("newTrip") Trip newTrip,
-                           Model model,
-                           HttpSession session){
+                        @ModelAttribute("newTrip") Trip newTrip,
+                        Model model,
+                        HttpSession session){
         model.addAttribute("trip", tripService.findTrip(tripId));
         model.addAttribute("user", session.getAttribute("user"));
         //Return Home if Not Logged in.
@@ -82,8 +82,8 @@ public class MainController {
     //Edit Page
     @GetMapping("/trips/edit/{tripId}")
     public String editBook(@PathVariable("tripId")Long tripId,
-                           Model model,
-                           HttpSession session){
+                        Model model,
+                        HttpSession session){
 
         model.addAttribute("editTrip", tripService.findTrip(tripId));
         //Return Home if Not Logged in.
@@ -97,10 +97,10 @@ public class MainController {
     //PUT request
     @RequestMapping(value = "/trips/{tripId}",  method =RequestMethod.PUT)
     public String submitEdit(@Valid
-                             @ModelAttribute("editTrip") Trip trip,
-                             BindingResult result,
-                             Model model,
-                             HttpSession session){
+                            @ModelAttribute("editTrip") Trip trip,
+                            BindingResult result,
+                            Model model,
+                            HttpSession session){
 
         model.addAttribute(session.getAttribute("user"));
 
