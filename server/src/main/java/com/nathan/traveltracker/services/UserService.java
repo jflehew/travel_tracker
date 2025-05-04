@@ -52,9 +52,8 @@ public class UserService {
     // whenever a user submits a login form.
     public User login(LoginUser newLoginObject, BindingResult result) {
         // TO-DO - Reject values:
-
         // Find user in the DB by email
-        Optional<User> potentialUser = userRepository.findByEmail(newLoginObject.getLoginEmail());
+        Optional<User> potentialUser = userRepository.findByEmail(newLoginObject.getEmail());
         if (potentialUser.isEmpty()){
             // Reject if NOT present
             result.rejectValue("loginEmail","Matches" ,"an account does not exist with this email");
@@ -64,7 +63,7 @@ public class UserService {
         User user = potentialUser.get();
 
         // Reject if BCrypt password match fails
-        if(!BCrypt.checkpw(newLoginObject.getLoginPassword(), user.getPassword())) {
+        if(!BCrypt.checkpw(newLoginObject.getPassword(), user.getPassword())) {
             result.rejectValue("loginPassword", "Matches", "Invalid Password!");
             return null;
         }
@@ -78,5 +77,13 @@ public class UserService {
         return user;
     }
 
+    public User getUserById(Long Id){
+        Optional<User> potentialUser = userRepository.findById(Id);
+        if(potentialUser.isEmpty()){
+            return null;
+        }
+        User user = potentialUser.get();
+        return user;
+    }
 
 }
