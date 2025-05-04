@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useUserAuthContext } from "../context/UserAuthContext";
 import { useNavigate } from "react-router-dom";
-//import RegistrationUser from user services
+import { registerUser } from "../services/userService";
 
 const defaultRegistrationInputUsed = {
     firstName: false,
@@ -126,8 +126,8 @@ export const Register = () => {
             setLoading(false)
             navigate("/dashboard")
         } catch (err) {
-            Object.entries(err).forEach(([field, message]) => {
-                setServerErrors((prev) => ({ ...prev, [field]: message }))
+            Object.entries(err.errors).forEach(([field, message]) => {
+                setRegistrationServerErrors((prev) => ({ ...prev, [field]: message }))
             })
         } finally {
             setSubmittingRegistration(false)
