@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-// import { authenticateUser } from "../services/userService";
+import { authenticateUser } from "../services/userService";
 
 const USERAUTHCONTEXT = createContext([])
 export const useUserAuthContext = () => useContext(USERAUTHCONTEXT)
@@ -15,7 +15,6 @@ export const UserAuthContext = ( { children } ) => {
             const delay = ms => new Promise(res => setTimeout(res, ms))
             await delay(300)
             try{
-                console.log("I'm running UserAuthContext, but i'm not actually authorizing anything yet.")
                 const result = await authenticateUser()
                 await delay(300)
                 setUser(result)
