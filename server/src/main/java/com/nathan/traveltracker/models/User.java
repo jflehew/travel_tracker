@@ -48,7 +48,7 @@ public class User {
 
     @Transient
     @NotEmpty(message="Confirm Password is required!")
-    private String confirm;
+    private String confirmPassword;
 
     // Auto-Populate Timestamps for Create and Update
     @PrePersist
@@ -107,12 +107,12 @@ public class User {
         this.password = password;
     }
 
-    public String getConfirm() {
-        return confirm;
+    public String getConfirmPassword() {
+        return confirmPassword;
     }
 
-    public void setConfirm(String confirm) {
-        this.confirm = confirm;
+    public void setConfirmPassword(String confirm) {
+        this.confirmPassword = confirm;
     }
 
     public String getFirstName() {

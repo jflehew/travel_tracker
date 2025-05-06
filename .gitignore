@@ -1,5 +1,6 @@
 # dotenv 
 .env.*
+/client/.env
 
 # Java 
 # Compiled class file
