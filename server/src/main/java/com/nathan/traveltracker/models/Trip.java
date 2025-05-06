@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.nathan.traveltracker.validators.FutureDate;
+
 import java.util.Date;
 
 @Entity
@@ -27,12 +29,15 @@ public class Trip {
     private String arrivalLocation;
 
     @NotEmpty(message = "API ID is Required")
-    private int apiID;
+    private String apiID;
 
-    @NotEmpty(message = "Deaparture Time is Required")
+    @FutureDate(message = "Departure date must be in the future")
+    @NotNull(message = "Deaparture Time is Required")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date departureDate;
 
-    @NotEmpty(message= "Arrival Time is Required.")
+    @NotNull(message= "Arrival Time is Required.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date arrivalDate;
 
     @NotEmpty(message = "Route Name is Required")
@@ -56,7 +61,17 @@ public class Trip {
     @JoinColumn(name="user_id")
     private User user;
 
+    @Transient
+    private Long userId;
     //Getters and Setters
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public Long getId() {
         return id;
@@ -98,11 +113,11 @@ public class Trip {
         this.arrivalLocation = arrivalLocation;
     }
 
-    public int getApiID() {
+    public String getApiID() {
         return apiID;
     }
 
-    public void setApiID(int apiID) {
+    public void setApiID(String apiID) {
         this.apiID = apiID;
     }
 

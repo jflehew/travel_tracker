@@ -5,27 +5,27 @@ import jakarta.validation.constraints.NotEmpty;
 public class LoginUser {
 
     @NotEmpty(message="Email is required!")
-    private String loginEmail;
+    private String email;
 
     @NotEmpty(message="Password is required!")
-    private String loginPassword;
+    private String password;
 
     public LoginUser() {}
 
-    public String getLoginEmail() {
-        return loginEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLoginEmail(String loginEmail) {
-        this.loginEmail = loginEmail;
+    public void setEmail(String loginEmail) {
+        this.email = loginEmail;
     }
 
-    public String getLoginPassword() {
-        return loginPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setLoginPassword(String loginPassword) {
-        this.loginPassword = loginPassword;
+    public void setPassword(String loginPassword) {
+        this.password = loginPassword;
     }
 
 }

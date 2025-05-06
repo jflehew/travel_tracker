@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useUserAuthContext } from "../context/UserAuthContext";
-// import loginUSer from services
+import { loginUser } from "../services/userService";
 import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
@@ -10,7 +10,7 @@ export const Login = () => {
         email: "",
         password: ""
     })
-    const [error, setError] = useState("What the hell is an error?")
+    const [error, setError] = useState("")
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
