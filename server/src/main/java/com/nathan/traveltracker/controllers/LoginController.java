@@ -119,7 +119,7 @@ public class LoginController {
 
 //Logout Method
     @GetMapping("/logout")
-    public ResponseEntity logout(HttpSession session, HttpServletResponse response) {
+    public ResponseEntity<?> logout(HttpSession session, HttpServletResponse response) {
         session.invalidate();
         Cookie cookie = new Cookie("JSESSIONID", null);
         cookie.setPath("/");
