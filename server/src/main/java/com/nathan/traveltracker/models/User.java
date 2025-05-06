@@ -62,7 +62,7 @@ public class User {
     }
 
 // ONE TO MANY
-     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
         private List<Trip> trips;
 
     public User() {}

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+
+
 @Controller
 public class LoginController {
     //Home Page Easy Change
@@ -31,9 +33,9 @@ public class LoginController {
 //Register Account POST method
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("newUser") User newUser,
-                           BindingResult result,
-                           Model model,
-                           HttpSession session) {
+                            BindingResult result,
+                            Model model,
+                            HttpSession session) {
 
         userService.register(newUser, result);
 
