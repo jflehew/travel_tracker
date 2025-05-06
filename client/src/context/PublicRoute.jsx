@@ -8,7 +8,7 @@ export const PublicRoute = () => {
     if (loading) {
         return (
             <div className="background" style={{ display: "flex", justifyContent: "center"}}>
-                <ClipLoader color="#4a90e2" size={50} />
+                <ClipLoader color="#c0c0c0" size={100} />
             </div>
         )
     }

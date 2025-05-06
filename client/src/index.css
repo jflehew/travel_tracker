@@ -37,6 +37,7 @@
   @apply
   bg-metallic-navy
   flex
+  flex-col
   justify-center
   items-center
   min-h-screen
@@ -133,6 +134,81 @@
   px-8
   m-4
   mx-auto
+}
+
+.table-container{
+  @apply
+  flex
+  justify-center
+  overflow-y-auto
+  rounded-2xl
+  border-4
+  border-metallic-white
+  max-h-[70vh]
+  font-modern
+  text-center
+  mx-14
+  shadow-metallic
+}
+
+.table-container table {
+  @apply
+  text-center
+  text-metallic-silver
+  border-8
+
+  bg-metallic-forest
+  overflow-hidden
+}
+
+.table-container table > thead > tr {
+  @apply
+  text-lg
+  underline
+  border-4
+  border-metallic-white
+  h-24
+}
+
+.table-container table > tbody > tr {
+  @apply
+  border-4
+  border-metallic-white
+  h-16
+}
+
+.table-container table > tbody > tr > td{
+  @apply
+  w-60
+}
+
+.table-container table > thead > tr > td{
+  @apply
+  w-60
+}
+
+.view-container{
+  @apply
+  font-modern
+  font-semibold
+  flex
+  flex-col
+  justify-center
+  items-center
+  border-[0.3vw]
+  border-metallic-silver
+  bg-metallic-forest
+  rounded-3xl
+  w-[45vw]
+  h-auto
+  p-4
+  shadow-metallic
+  text-metallic-silver
+}
+
+.view-container ul > li{
+  @apply
+  my-3
 }
 
 

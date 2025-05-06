@@ -6,6 +6,8 @@ import { Register} from './components/Register'
 import { Dashboard } from './components/Dashboard'
 import { PublicRoute } from './context/PublicRoute'
 import { PrivateRoute } from './context/PrivateRoute'
+import { TravelForm } from './components/TravelForm'
+import { TravelView } from './components/TravelView'
 
 function App() {
 
@@ -19,7 +21,10 @@ function App() {
           <Route path='/login' element={ <Login/> }/>
         </Route>
         <Route element={<PrivateRoute/>}>
+          <Route path='/trip/add' element={ <TravelForm/> }/>
           <Route path='/dashboard' element={ <Dashboard/> }/>
+          <Route path='/trip/update/:tripID' element={ <TravelForm/> }/>
+          <Route path='/trip/view/:tripID' element={ <TravelView/> }/>
         </Route>
       </Routes>
     </>
