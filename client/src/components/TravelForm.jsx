@@ -3,6 +3,7 @@ import { useUserAuthContext } from "../context/UserAuthContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { createTrip, getTrip, updateTrip } from "../services/tripService";
 
+
 const defaultTrip = {
     departureLocation: "",
     arrivalLocation: "",
@@ -10,7 +11,8 @@ const defaultTrip = {
     departureDate: "",
     arrivalDate: "",
     routeName: "",
-    status: ""
+    status: "",
+    userId: null
 }
 const defaultServerErrors = {
     departureLocation: "",
@@ -41,9 +43,9 @@ const defaultTripInputUsed = {
 }
 
 export const TravelForm = () => {
+    const { user } = useUserAuthContext()
     const navigate = useNavigate()
     const { tripID } = useParams() 
-    const { user } = useUserAuthContext()
     const [tripInfo, setTripInfo] = useState(defaultTrip)
     const [serverErrors, setServerErrors] = useState(defaultServerErrors)
     const [submitting, setSubmitting] = useState(false)
@@ -97,6 +99,17 @@ export const TravelForm = () => {
             const valid = value !== null && value !== ""
             setTripInputIsValid(prev => ({...prev, [name]: valid}))
         }
+        if (name === "departureDate"){
+            const departure = new Date(value)
+            const valid = departure > new Date()
+            setTripInputIsValid(prev => ({...prev, [name]: valid}))
+        }
+        if (name === "arrivalDate"){
+            const departure = new Date(tripInfo.departureDate)
+            const arrival = new Date(value)
+            const valid = arrival > departure
+            setTripInputIsValid(prev => ({...prev, [name]: valid}))
+        }
     }
 
     const handleBlur = e => {
@@ -106,25 +119,37 @@ export const TravelForm = () => {
 
     const handleChange = e => {
         const {name, value} = e.target
-        let updatedValue = value
-        if(
-            name === "departureDate" ||
-            name === "arrivalDate"
-        ){
-            const utcDateTime = new Date(value).toISOString()
-            updatedValue = utcDateTime
-        }
         handleTripValidation(name, value)
-        setTripInfo(prev => ({...prev, [name]: updatedValue}))
+        setTripInfo(prev => ({...prev, [name]: value}))
     }
+
+    const formatForDateTimeLocal = isoString => {
+        if(!isoString) return ""
+        const date = new Date(isoString)
+        const offset = date.getTimezoneOffset() * 60000
+        const localISO = new Date(date.getTime() - offset).toISOString()
+        return localISO.slice(0, 16)
+    }
+
+    const prepareTripForSubmit = () => {
+        const dataToSubmit = { ...tripInfo };
+        ["departureDate", "arrivalDate"].forEach((field) => {
+            if (tripInfo[field]) {
+                dataToSubmit[field] = new Date(tripInfo[field]).toISOString(); // Convert to UTC
+            }
+        });
+        return dataToSubmit;
+    };
 
     const handleSubmit = async e => {
         e.preventDefault()
         setSubmitting(true)
+        const formData = prepareTripForSubmit()
+        formData.userId = user.id
         try {
             !tripID
-            ? await createTrip(tripInfo)
-            : await updateTrip(tripInfo)
+            ? await createTrip(formData)
+            : await updateTrip(formData.id, formData)
             navigate('/dashboard')
         } catch (err){
             Object.entries(err).forEach(([field, message]) => {
@@ -211,7 +236,7 @@ export const TravelForm = () => {
                             <input 
                                 type="datetime-local"
                                 onChange={handleChange}
-                                value={tripInfo.departureDate}
+                                value={formatForDateTimeLocal(tripInfo.departureDate)}
                                 name="departureDate"
                                 onBlur={handleBlur}
                             />
@@ -233,7 +258,7 @@ export const TravelForm = () => {
                             <input 
                                 type="datetime-local"
                                 onChange={handleChange}
-                                value={tripInfo.arrivalDate}
+                                value={formatForDateTimeLocal(tripInfo.arrivalDate)}
                                 name="arrivalDate"
                                 onBlur={handleBlur}
                             />

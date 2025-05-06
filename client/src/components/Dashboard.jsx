@@ -5,18 +5,27 @@ import ClipLoader from "react-spinners/Cliploader";
 
 export const Dashboard = () => {
     const [trips, setTrips] = useState([])
-    const [loading, setLoading] = false
+    const [loading, setLoading] = useState(false)
 
     const fetchTrips = async () => {
         setLoading(true)
         try{
             const res = await getAllTrips()
-            setTrips(prev => ([...prev, ...res]))
+            setTrips(res)
         } catch (err){
             console.error(err)
         } finally {
             setLoading(false)
         }
+    }
+
+    const formatDateTime = isoString => {
+        if(!isoString) return "No Date Available"
+        const date = new Date(isoString)
+        return new Intl.DateTimeFormat('en-US', {
+            dateStyle: 'medium',
+            timeStyle: 'short'
+        }).format(date)
     }
 
     useEffect(() => {
@@ -32,51 +41,57 @@ export const Dashboard = () => {
         }
     }
     return (
-        <div>
-
-        
-            <h1>Your Trips!</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <td>View Trip:</td>
-                        <td>Departure Location:</td>
-                        <td>Arrival Location:</td>
-                        <td>Arrival Location:</td>
-                        <td>Arrival Location:</td>
-                        <td>Arrival Location:</td>
-                        <td>Status:</td>
-                        <td>Update Trip:</td>
-                        <td>Delete Trip:</td>
-                    </tr>
-                </thead>
-                
-                <tbody>
-                    {loading
-                    ?   
-                    <tr>
-                        <td colSpan="9">
-                            <div className="flex justify-center items-center h-max">
-                                <ClipLoader color="#c0c0c0" size={100}/>
-                            </div>
-                        </td>
-                    </tr> 
-                    :
-                    trips.map(trip => {
-                        <tr key={trip.id}>
-                            <td><Link className="underline m-2" to={`/trip/view/${trip.id}`}>View Trip</Link></td>
-                            <td>{trip.departureLocation}</td>
-                            <td>{trip.arrivalLocation}</td>
-                            <td>{trip.departureDate}</td>
-                            <td>{trip.arrivalDate}</td>
-                            <td>{trip.routeName}</td>
-                            <td>{trip.status}</td>
-                            <td><Link className="underline m-2" to={`/trip/update/${trip.id}`}>Update Trip</Link></td>
-                            <td><button onClick={() => handleDelete(trip.id)}>Delete</button></td>
+        <div className="background">
+        <h2 className="text-4xl text-center font-modern mb-6 underline text-metallic-silver mt-8">Your Trips!</h2>
+            <div className="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <td>View Trip:</td>
+                            <td>Departure Location:</td>
+                            <td>Arrival Location:</td>
+                            <td>Departure Date:</td>
+                            <td>Arrival Date:</td>
+                            <td>Route Name:</td>
+                            <td>Status:</td>
+                            <td>Update Trip:</td>
+                            <td>Delete Trip:</td>
                         </tr>
-                    })}
-                </tbody>
-            </table>
+                    </thead>
+                    
+                    <tbody>
+                        {loading
+                        ?   
+                        <tr>
+                            <td colSpan="9">
+                                <div className="flex justify-center items-center h-max">
+                                    <ClipLoader color="#c0c0c0" size={100}/>
+                                </div>
+                            </td>
+                        </tr> 
+                        :
+                        trips.length === 0 
+                        ? 
+                        <tr>
+                            <td colSpan='9'>No Trips, please add a trip!</td>
+                        </tr>
+                        :
+                        trips.map(trip => (
+                            <tr key={trip.id}>
+                                <td><Link className="underline m-2" to={`/trip/view/${trip.id}`}>View Trip</Link></td>
+                                <td>{trip.departureLocation}</td>
+                                <td>{trip.arrivalLocation}</td>
+                                <td>{formatDateTime(trip.departureDate)}</td>
+                                <td>{formatDateTime(trip.arrivalDate)}</td>
+                                <td>{trip.routeName}</td>
+                                <td>{trip.status}</td>
+                                <td><Link className="underline m-2" to={`/trip/update/${trip.id}`}>Update Trip</Link></td>
+                                <td><button onClick={() => handleDelete(trip.id)}>Delete</button></td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }

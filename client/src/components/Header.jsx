@@ -38,7 +38,7 @@ export const Header = () => {
                 }
                 {user && <a className="nav-link" href="" onClick={handelLogout}>Logout</a>}
                 {user && !isDashboard && <Link className="nav-link" to={'/dashboard'}>Dashboard</Link>}
-                {user && !isTripForm && <Link className="nav-link" to={'/trip/add'}>Dashboard</Link>}
+                {user && !isTripForm && <Link className="nav-link" to={'/trip/add'}>Add Trip</Link>}
             </div>
         </div>
     )

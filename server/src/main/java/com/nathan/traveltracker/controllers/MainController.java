@@ -1,126 +1,115 @@
 package com.nathan.traveltracker.controllers;
 
+import com.nathan.traveltracker.dto.TripDTO;
 import com.nathan.traveltracker.models.Trip;
-import com.nathan.traveltracker.models.Trip;
+import com.nathan.traveltracker.models.User;
 import com.nathan.traveltracker.services.TripService;
-import com.nathan.traveltracker.services.TripService;
-import jakarta.servlet.http.HttpSession;
+import com.nathan.traveltracker.services.UserService;
+
 import jakarta.validation.Valid;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+
+
+@RestController
+@RequestMapping("/api/trips")
 public class MainController {
 
     @Autowired
     private TripService tripService;
+    @Autowired
+    private UserService userService;
 
-//  Home/Display All
-    @GetMapping("/home")
-    public String index(Model model,
-                        HttpSession session) {
-        model.addAttribute("user", session.getAttribute("user"));
-        model.addAttribute("trips", tripService.getAllTrips());
-        //Return Home if Not Logged in.
-        if (session.getAttribute("user") == null) {
-            return "redirect:/";
-        }
-        return "home.jsp";
+    @GetMapping("/get/all")
+    public ResponseEntity<?> getAllTrips() {
+        List<Trip> allTrips = tripService.getAllTrips();
+        List<TripDTO> responseTrips = allTrips.stream()
+            .map(TripDTO::new)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(responseTrips);
     }
+    
 
-    //Add Trip Page
-    @GetMapping("/trips/new")
-    public String addBook( @ModelAttribute("newTrip") Trip newTrip,
-                           Model model,
-                           HttpSession session){
-
-        model.addAttribute("user", session.getAttribute("user"));
-        //Return Home if Not Logged in.
-        if (session.getAttribute("user") == null) {
-            return "redirect:/";
+    @PostMapping("/create")
+    public ResponseEntity<?> addTrip(
+                            @Valid 
+                            @RequestBody Trip newTrip,
+                            BindingResult result
+                            ){
+        User tripUser = userService.getUserById(newTrip.getUserId());
+        if (tripUser == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("errors", "Invalid user ID"));
         }
-        return "addTrip.jsp";
-    }
-
-    //Create Trip Method
-    @PostMapping("/trips/createTrip")
-    public String addTrip(@Valid @ModelAttribute("newTrip")Trip newTrip,
-                          BindingResult result,
-                          Model model,
-                          HttpSession session){
-
-        tripService.addTrip(newTrip, result);
+        newTrip.setUser(tripUser);
+        Trip savedTrip = tripService.addTrip(newTrip, result);
         if(result.hasErrors()) {
-            model.addAttribute("user",session.getAttribute("user"));
-            return "addTrip.jsp";
+            Map<String, String> tripErrors = new HashMap<>();
+            result.getFieldErrors().forEach(err -> {
+                tripErrors.put(err.getField(), err.getDefaultMessage());
+            });
+            return ResponseEntity
+                .badRequest()
+                .body(Map.of("errors", tripErrors));
         }
-
-
-        return "redirect:/home";
+        
+        TripDTO responseTrip = new TripDTO(savedTrip);
+        return ResponseEntity.ok(responseTrip);
     }
 
-    //Trip Info
-    @GetMapping("/trips/{tripId}")
-    public String tripInfo(@PathVariable("tripId")Long tripId,
-                           @ModelAttribute("newTrip") Trip newTrip,
-                           Model model,
-                           HttpSession session){
-        model.addAttribute("trip", tripService.findTrip(tripId));
-        model.addAttribute("user", session.getAttribute("user"));
-        //Return Home if Not Logged in.
-        if (session.getAttribute("user") == null) {
-            return "redirect:/";
+    @GetMapping("/get/one/{tripId}")
+    public ResponseEntity<?> tripInfo(@PathVariable Long tripId){
+        Trip selectedTrip = tripService.findTrip(tripId);
+        if(selectedTrip == null){
+            return ResponseEntity
+                .badRequest()
+                .body(Map.of("errors","Trip Id does not exist" ));
         }
-        return "tripInfo.jsp";
+        TripDTO responseTrip = new TripDTO(selectedTrip);
+        return ResponseEntity.ok(responseTrip);
     }
 
-
-
-    //Edit Page
-    @GetMapping("/trips/edit/{tripId}")
-    public String editBook(@PathVariable("tripId")Long tripId,
-                           Model model,
-                           HttpSession session){
-
-        model.addAttribute("editTrip", tripService.findTrip(tripId));
-        //Return Home if Not Logged in.
-        if (session.getAttribute("user") == null) {
-            return "redirect:/";
-        }
-        model.addAttribute("user",session.getAttribute("user"));
-        return "editTrip.jsp";
-    }
-
-    //PUT request
-    @RequestMapping(value = "/trips/{tripId}",  method =RequestMethod.PUT)
-    public String submitEdit(@Valid
-                             @ModelAttribute("editTrip") Trip trip,
-                             BindingResult result,
-                             Model model,
-                             HttpSession session){
-
-        model.addAttribute(session.getAttribute("user"));
-
+    @PutMapping("/update/{tripId}")
+    public ResponseEntity<?> editTrip(
+                        @PathVariable Long tripId,
+                        @Valid
+                        @RequestBody Trip updatedTrip,
+                        BindingResult result
+    ){
+        Trip savedTrip = tripService.editTrip(tripId, updatedTrip, result);
         if(result.hasErrors()) {
-            model.addAttribute("trip", trip);
-            return "editTrip.jsp";
+            Map<String, String> tripErrors = new HashMap<>();
+            result.getFieldErrors().forEach(err -> {
+                tripErrors.put(err.getField(), err.getDefaultMessage());
+            });
+            return ResponseEntity
+                .badRequest()
+                .body(Map.of("errors", tripErrors));
         }
-
-        tripService.editTrip(trip, result);
-        return "redirect:/trips/{tripId}";
+        TripDTO responseTrip = new TripDTO(savedTrip);
+        return ResponseEntity.ok(responseTrip);
     }
 
-    //DELETE Method
-    @GetMapping("/trips/delete/{tripId}")
-    public String deleteTrip(@PathVariable Long tripId, HttpSession session) {
+    @DeleteMapping("/delete/{tripId}")
+    public ResponseEntity<?> deleteTrip(@PathVariable Long tripId) {
         Trip trip = tripService.findTrip(tripId);
-
-        tripService.deleteTripById(tripId);
-        return "redirect:/home";
-
+        if (trip == null){
+            return ResponseEntity
+                .badRequest()
+                .body(Map.of("errors","Trip Id does not exist" )); 
+        }
+        tripService.deleteTripById(tripId);;
+        return ResponseEntity.ok(Map.of("Success", "Trip Successfully Deleted"));
     }
 
 }

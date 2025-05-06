@@ -16,25 +16,39 @@ public class TripService {
     private TripRepository tripRepository;
 
     public Trip addTrip(Trip  newTrip, BindingResult result) {
-
         if(result.hasErrors()) {
             return null;
+        }
+        if (newTrip.getArrivalDate() != null && 
+        newTrip.getDepartureDate() != null &&
+        !newTrip.getArrivalDate().after(newTrip.getDepartureDate())) {
+        result.rejectValue("arrivalDate", "Invalid", "Arrival date must be after departure date.");
         }
 
         return tripRepository.save(newTrip);
     }
 
-    public Trip editTrip(Trip currentTrip, BindingResult result) {
-
+    public Trip editTrip(Long id, Trip currentTrip, BindingResult result) {
         if(result.hasErrors()) {
             return null;
         }
-
+        if (currentTrip.getArrivalDate() != null && 
+        currentTrip.getDepartureDate() != null &&
+        !currentTrip.getArrivalDate().after(currentTrip.getDepartureDate())) {
+        result.rejectValue("arrivalDate", "Invalid", "Arrival date must be after departure date.");
+        }
+        Optional<Trip> existingTripOpt = tripRepository.findById(id);
+        if (existingTripOpt == null){
+            return null;
+        }
+        Trip existingTrip = existingTripOpt.get();
+        currentTrip.setId(id);
+        currentTrip.setUser(existingTrip.getUser());
+        currentTrip.setCreatedAt(existingTrip.getCreatedAt());
         return tripRepository.save(currentTrip);
     }
 
     public List<Trip> getAllTrips(){
-
         return tripRepository.findAll();
     }
     public Trip findTrip(Long id) {
