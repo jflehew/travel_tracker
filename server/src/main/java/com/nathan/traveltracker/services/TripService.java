@@ -48,9 +48,10 @@ public class TripService {
         return tripRepository.save(currentTrip);
     }
 
-    public List<Trip> getAllTrips(){
-        return tripRepository.findAll();
+    public List<Trip> getAllTrips(Long id){
+        return tripRepository.findByUser_Id(id);
     }
+
     public Trip findTrip(Long id) {
         Optional<Trip> optionalTrip = tripRepository.findById(id);
         return optionalTrip.orElse(null);

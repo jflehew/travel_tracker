@@ -6,6 +6,7 @@ import com.nathan.traveltracker.models.User;
 import com.nathan.traveltracker.services.TripService;
 import com.nathan.traveltracker.services.UserService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import java.util.HashMap;
@@ -31,8 +32,9 @@ public class MainController {
     private UserService userService;
 
     @GetMapping("/get/all")
-    public ResponseEntity<?> getAllTrips() {
-        List<Trip> allTrips = tripService.getAllTrips();
+    public ResponseEntity<?> getAllTrips(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        List<Trip> allTrips = tripService.getAllTrips(user.getId());
         List<TripDTO> responseTrips = allTrips.stream()
             .map(TripDTO::new)
             .collect(Collectors.toList());
