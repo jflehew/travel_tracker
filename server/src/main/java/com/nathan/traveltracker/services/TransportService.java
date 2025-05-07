@@ -5,10 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Map;
+
 
 @Service
 public class TransportService {
@@ -24,47 +23,52 @@ public class TransportService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public List<String> findConnectingLines(String origin, String destination) {
-        String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/Line/Mode/tube/Route")
+    public Map<String, Object> getJourney(String departureId, String arrivalId) {
+        String url = UriComponentsBuilder.fromUriString(baseUrl + "/Journey/JourneyResults/{from}/to/{to}")
+                .queryParam("app_id", appId)
+                .queryParam("app_key", appKey)
+                .buildAndExpand(departureId, arrivalId)
+                .toUriString();
+    
+        return restTemplate.getForObject(url, Map.class);
+    }
+
+    public List<Map<String, Object>> getTubeStations(String lineId) {
+        String url = UriComponentsBuilder.fromUriString(baseUrl + "/Line/{lineId}/StopPoints")
+                .queryParam("app_id", appId)
+                .queryParam("app_key", appKey)
+                .buildAndExpand(lineId)
+                .toUriString();
+        List<Map<String, Object>> response = restTemplate.getForObject(url, List.class);
+        // System.out.println(new ObjectMapper().writeValueAsString(response));
+        // return (List<Map<String, Object>>) response.get("stopPoints");
+        return response;
+    }
+
+    public List<Map<String, Object>> getTubeLines() {
+        String url = UriComponentsBuilder.fromUriString(baseUrl + "/Line/Mode/tube")
                 .queryParam("app_id", appId)
                 .queryParam("app_key", appKey)
                 .toUriString();
-
-        LineRoute[] lines = restTemplate.getForObject(url, LineRoute[].class);
-        if (lines == null) return List.of();
-
-        List<String> results = new ArrayList<>();
-        for (LineRoute line : lines) {
-            for (RouteSection section : line.routeSections) {
-                List<String> stationNames = section.stationIntervals.stream()
-                    .flatMap(interval -> interval.stopPoints.stream())
-                    .map(stop -> stop.name.toLowerCase())
-                    .collect(Collectors.toList());
-
-                if (stationNames.contains(origin.toLowerCase())) {
-                    if (destination == null || destination.isBlank() || stationNames.contains(destination.toLowerCase())) {
-                        results.add(line.name);
-                    }
-                }
-            }
-        }
-        return results;
+    
+        List<Map<String, Object>> lines = restTemplate.getForObject(url, List.class);
+        return lines;
     }
 
-    static class LineRoute {
-        public String name;
-        public List<RouteSection> routeSections;
-    }
+    // static class LineRoute {
+    //     public String name;
+    //     public List<RouteSection> routeSections;
+    // }
 
-    static class RouteSection {
-        public List<StationInterval> stationIntervals;
-    }
+    // static class RouteSection {
+    //     public List<StationInterval> stationIntervals;
+    // }
 
-    static class StationInterval {
-        public List<StopPoint> stopPoints;
-    }
+    // static class StationInterval {
+    //     public List<StopPoint> stopPoints;
+    // }
 
-    static class StopPoint {
-        public String name;
-    }
+    // static class StopPoint {
+    //     public String name;
+    // }
 }

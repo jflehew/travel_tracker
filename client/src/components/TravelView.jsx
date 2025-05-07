@@ -7,6 +7,7 @@ export const TravelView = () => {
     const {tripID} = useParams()
     const [trip, setTrip] = useState({})
     const [loading, setLoading] = useState(false)
+    const [timeDifference, setTimeDifference] = useState({minutes: 0, seconds: 0})
 
     const formatDateTime = isoString => {
         if(!isoString) return "No Date Available"
@@ -32,6 +33,28 @@ export const TravelView = () => {
         fetchTrip()
     }, [])
 
+    useEffect(() => {
+        if (!trip?.departureDate) return;
+    
+        const updateDepartureCountdown = () => {
+            const now = Date.now();
+            const departureDate = new Date(trip.departureDate).getTime()
+            const departureDifference = departureDate - now
+            if (departureDifference <= 0){
+                setTimeDifference({hours: 0, minutes: 0, seconds: 0})
+                return
+            }
+            const totalSeconds = Math.floor(departureDifference / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            setTimeDifference({hours, minutes, seconds});
+        };
+        updateDepartureCountdown(); 
+        const interval = setInterval(updateDepartureCountdown, 1000); 
+        return () => clearInterval(interval); 
+    }, [trip]);
+
     return (
         <div className="background">
             {loading
@@ -46,9 +69,10 @@ export const TravelView = () => {
                     <li>Arrival Location: {trip.arrivalLocation}</li>
                     <li>Departure Date: {formatDateTime(trip.departureDate)}</li>
                     <li>Arrival Date: {formatDateTime(trip.arrivalDate)}</li>
+                    <li>Expected Duration: {trip.duration} Minutes</li>
                     <li>Departure Location: {trip.departureLocation}</li>
-                    <li>Route Name: {trip.routeName}</li>
-                    <li>Trip Status: {trip.status}</li>
+                    <li>Line: {trip.lineName}</li>
+                    {trip.status === "FUTURE" && <li>{timeDifference.hours}h {timeDifference.minutes}m  {timeDifference.seconds}s</li>}
                 </ul>
             </div>
             }

@@ -7,6 +7,10 @@ export const Dashboard = () => {
     const [trips, setTrips] = useState([])
     const [loading, setLoading] = useState(false)
 
+    const futureTrips = trips.filter(trip => trip.status === "FUTURE")
+    const presentTrips = trips.filter(trip => trip.status === "PRESENT")
+    const pastTrips = trips.filter(trip => trip.status === "PAST")
+
     const fetchTrips = async () => {
         setLoading(true)
         try{
@@ -42,56 +46,142 @@ export const Dashboard = () => {
     }
     return (
         <div className="background">
-        <h2 className="text-4xl text-center font-modern mb-6 underline text-metallic-silver mt-8">Your Trips!</h2>
+        <h2 className="text-4xl text-center font-modern mb-6 underline text-metallic-silver mt-8">Your Trips Current Trips:</h2>
             <div className="table-container">
                 <table>
-                    <thead>
-                        <tr>
-                            <td>View Trip:</td>
-                            <td>Departure Location:</td>
-                            <td>Arrival Location:</td>
-                            <td>Departure Date:</td>
-                            <td>Arrival Date:</td>
-                            <td>Route Name:</td>
-                            <td>Status:</td>
-                            <td>Update Trip:</td>
-                            <td>Delete Trip:</td>
-                        </tr>
-                    </thead>
-                    
-                    <tbody>
-                        {loading
-                        ?   
-                        <tr>
-                            <td colSpan="9">
-                                <div className="flex justify-center items-center h-max">
-                                    <ClipLoader color="#c0c0c0" size={100}/>
-                                </div>
-                            </td>
-                        </tr> 
-                        :
-                        trips.length === 0 
-                        ? 
-                        <tr>
-                            <td colSpan='9'>No Trips, please add a trip!</td>
-                        </tr>
-                        :
-                        trips.map(trip => (
-                            <tr key={trip.id}>
-                                <td><Link className="underline m-2" to={`/trip/view/${trip.id}`}>View Trip</Link></td>
-                                <td>{trip.departureLocation}</td>
-                                <td>{trip.arrivalLocation}</td>
-                                <td>{formatDateTime(trip.departureDate)}</td>
-                                <td>{formatDateTime(trip.arrivalDate)}</td>
-                                <td>{trip.routeName}</td>
-                                <td>{trip.status}</td>
-                                <td><Link className="underline m-2" to={`/trip/update/${trip.id}`}>Update Trip</Link></td>
-                                <td><button onClick={() => handleDelete(trip.id)}>Delete</button></td>
+                        <thead>
+                            <tr>
+                                <td>View Trip:</td>
+                                <td>Departure Location:</td>
+                                <td>Arrival Location:</td>
+                                <td>Departure Date:</td>
+                                <td>Arrival Date:</td>
+                                <td>Line:</td>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            {loading
+                            ?
+                            <tr>
+                                <td colSpan="6">
+                                    <div className="flex justify-center items-center h-max">
+                                        <ClipLoader color="#c0c0c0" size={100}/>
+                                    </div>
+                                </td>
+                            </tr> 
+                            :
+                            presentTrips.length === 0 
+                            ? 
+                            <tr>
+                                <td colSpan='6'>No Current Trips.</td>
+                            </tr>
+                            :
+                            presentTrips.map(trip => (
+                                <tr key={trip.id}>
+                                    <td><Link className="underline m-2" to={`/trip/view/${trip.id}`}>View Trip</Link></td>
+                                    <td>{trip.departureLocation}</td>
+                                    <td>{trip.arrivalLocation}</td>
+                                    <td>{formatDateTime(trip.departureDate)}</td>
+                                    <td>{formatDateTime(trip.arrivalDate)}</td>
+                                    <td>{trip.lineName}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                <h2 className="text-4xl text-center font-modern mb-6 underline text-metallic-silver mt-8">Your Future Trips:</h2>
+                <div className="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>View Trip:</td>
+                                <td>Departure Location:</td>
+                                <td>Arrival Location:</td>
+                                <td>Departure Date:</td>
+                                <td>Arrival Date:</td>
+                                <td>Expected Duration:</td>
+                                <td>Line:</td>
+                                <td>Update Trip:</td>
+                                <td>Delete Trip:</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loading
+                            ?   
+                            <tr>
+                                <td colSpan="8">
+                                    <div className="flex justify-center items-center h-max">
+                                        <ClipLoader color="#c0c0c0" size={100}/>
+                                    </div>
+                                </td>
+                            </tr> 
+                            :
+                            futureTrips.length === 0 
+                            ? 
+                            <tr>
+                                <td colSpan='8'>No upcomming trips! Please add one!</td>
+                            </tr>
+                            :
+                            futureTrips.map(trip => (
+                                <tr key={trip.id}>
+                                    <td><Link className="underline m-2" to={`/trip/view/${trip.id}`}>View Trip</Link></td>
+                                    <td>{trip.departureLocation}</td>
+                                    <td>{trip.arrivalLocation}</td>
+                                    <td>{formatDateTime(trip.departureDate)}</td>
+                                    <td>{formatDateTime(trip.arrivalDate)}</td>
+                                    <td>{trip.duration} Minutes</td>
+                                    <td>{trip.lineName}</td>
+                                    <td><Link className="underline m-2" to={`/trip/update/${trip.id}`}>Update Trip</Link></td>
+                                    <td><button onClick={() => handleDelete(trip.id)}>Delete</button></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                <h2 className="text-4xl text-center font-modern mb-6 underline text-metallic-silver mt-8">Your Past Trips:</h2>
+                <div className="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>View Trip:</td>
+                                <td>Departure Location:</td>
+                                <td>Arrival Location:</td>
+                                <td>Departure Date:</td>
+                                <td>Arrival Date:</td>
+                                <td>Line:</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loading
+                            ?   
+                            <tr>
+                                <td colSpan="6">
+                                    <div className="flex justify-center items-center h-max">
+                                        <ClipLoader color="#c0c0c0" size={100}/>
+                                    </div>
+                                </td>
+                            </tr> 
+                            :
+                            pastTrips.length === 0 
+                            ? 
+                            <tr>
+                                <td colSpan='6'>No Past Trips.</td>
+                            </tr>
+                            :
+                            pastTrips.map(trip => (
+                                <tr key={trip.id}>
+                                    <td><Link className="underline m-2" to={`/trip/view/${trip.id}`}>View Trip</Link></td>
+                                    <td>{trip.departureLocation}</td>
+                                    <td>{trip.arrivalLocation}</td>
+                                    <td>{formatDateTime(trip.departureDate)}</td>
+                                    <td>{formatDateTime(trip.arrivalDate)}</td>
+                                    <td>{trip.lineName}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            
         </div>
     )
 }
