@@ -1,7 +1,6 @@
 package com.nathan.traveltracker.controllers;
 
 import com.nathan.traveltracker.services.TransportService;
-// import com.example.app.service.TransportService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
@@ -14,12 +13,6 @@ public class TransportController {
     public TransportController(TransportService tflService) {
         this.tflService = tflService;
     }
-
-    // @GetMapping("/lines")
-    // public List<String> getConnectingLines(@RequestParam String origin,
-    //                                         @RequestParam(required = false) String destination) {
-    //     return tflService.findConnectingLines(origin, destination);
-    // }
 
     @GetMapping("/journey")
     public Map<String, Object> getJourney(
