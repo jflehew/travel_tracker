@@ -3,6 +3,7 @@ import { useUserAuthContext } from "../context/UserAuthContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { createTrip, getTrip, updateTrip } from "../services/tripService";
 import { getJourney, getLines, getStations } from "../services/transportService";
+import ClipLoader from "react-spinners/Cliploader";
 
 
 const defaultTrip = {
@@ -66,6 +67,7 @@ export const TravelForm = () => {
     const [destination, setDestination] = useState("")
     const [departureLocation, setDepartureLocation] = useState("")
     const [journeys, setJourneys] = useState([])
+    const [tripsLoading, setTripsLoading] = useState(false)
     const tripIsValid = (
         tripInputIsValid.departureLocation &&
         tripInputIsValid.arrivalLocation &&
@@ -233,13 +235,15 @@ export const TravelForm = () => {
     }
 
     const handleTravel = async () =>{
-        
+            setTripsLoading(true)
         try {
             const response = await getJourney(tripInfo.departureLocationId, tripInfo.arrivalLocationId)
             setJourneys(response.journeys)
         } catch (err) {
             console.error(err)
-        } 
+        } finally {
+            setTripsLoading(false)
+        }
     }
 
     const handleJourney = async (journey) => {
@@ -320,6 +324,15 @@ export const TravelForm = () => {
                         </tr>
                     </thead>
                     <tbody>
+                        {tripsLoading && 
+                            <tr>
+                                <td colSpan="4">
+                                    <div className="flex justify-center items-center h-max">
+                                        <ClipLoader color="#c0c0c0" size={100}/>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                         {journeys.map((journey, index) => (
                             <tr key={index}>
                                 <td>{new Date(journey.startDateTime).toLocaleTimeString()}</td>

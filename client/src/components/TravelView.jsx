@@ -7,7 +7,8 @@ export const TravelView = () => {
     const {tripID} = useParams()
     const [trip, setTrip] = useState({})
     const [loading, setLoading] = useState(false)
-    const [timeDifference, setTimeDifference] = useState({minutes: 0, seconds: 0})
+    const [departureTimeDifference, setDepartureTimeDifference] = useState({departureHours: 0, departureMinutes: 0, departureSeconds: 0})
+    const [arrivalTimeDifference, setArrivalTimeDifference] = useState({arrivalHours : 0,arrivalMinutes: 0, arrivalSeconds: 0})
 
     const formatDateTime = isoString => {
         if(!isoString) return "No Date Available"
@@ -34,22 +35,32 @@ export const TravelView = () => {
     }, [])
 
     useEffect(() => {
-        if (!trip?.departureDate) return;
-    
+        if (!trip?.departureDate) return
+
         const updateDepartureCountdown = () => {
             const now = Date.now();
             const departureDate = new Date(trip.departureDate).getTime()
             const departureDifference = departureDate - now
             if (departureDifference <= 0){
-                setTimeDifference({hours: 0, minutes: 0, seconds: 0})
-                return
+                setDepartureTimeDifference({departureHours: 0, departureMinutes: 0, departureSeconds: 0})
             }
-            const totalSeconds = Math.floor(departureDifference / 1000);
-            const hours = Math.floor(totalSeconds / 3600);
-            const minutes = Math.floor((totalSeconds % 3600) / 60);
-            const seconds = totalSeconds % 60;
-            setTimeDifference({hours, minutes, seconds});
-        };
+            const totalDepartureSeconds = Math.floor(departureDifference / 1000);
+            const departureHours = Math.floor(totalDepartureSeconds / 3600);
+            const departureMinutes = Math.floor((totalDepartureSeconds % 3600) / 60);
+            const departureSeconds = totalDepartureSeconds % 60;
+            setDepartureTimeDifference({departureHours, departureMinutes, departureSeconds});
+            const arrivalDate = new Date(trip.arrivalDate).getTime()
+            const arrivalDifference = arrivalDate - now
+            if (arrivalDifference <= 0){
+                console.log("i'm int arrival difference if statement")
+                setArrivalTimeDifference({arrivalHours: 0, arrivalMinutes: 0, arrivalSeconds: 0})
+            }
+            const totalArrivalSeconds = Math.floor(arrivalDifference / 1000);
+            const arrivalHours = Math.floor(totalArrivalSeconds / 3600);
+            const arrivalMinutes = Math.floor((totalArrivalSeconds % 3600) / 60);
+            const arrivalSeconds = totalArrivalSeconds % 60;
+            setArrivalTimeDifference({arrivalHours, arrivalMinutes, arrivalSeconds})
+        }
         updateDepartureCountdown(); 
         const interval = setInterval(updateDepartureCountdown, 1000); 
         return () => clearInterval(interval); 
@@ -64,6 +75,7 @@ export const TravelView = () => {
             </div>
             :
             <div className="view-container">
+                <h2>Your Trip:</h2>
                 <ul>
                     <li>Departure Location: {trip.departureLocation}</li>
                     <li>Arrival Location: {trip.arrivalLocation}</li>
@@ -72,7 +84,8 @@ export const TravelView = () => {
                     <li>Expected Duration: {trip.duration} Minutes</li>
                     <li>Departure Location: {trip.departureLocation}</li>
                     <li>Line: {trip.lineName}</li>
-                    {trip.status === "FUTURE" && <li>{timeDifference.hours}h {timeDifference.minutes}m  {timeDifference.seconds}s</li>}
+                    {trip.status === "FUTURE" && <li>{departureTimeDifference.departureHours}h {departureTimeDifference.departureMinutes}m  {departureTimeDifference.departureSeconds}s</li>}
+                    {trip.status === "PRESENT" && <li>{arrivalTimeDifference.arrivalHours}h {arrivalTimeDifference.arrivalMinutes}m {arrivalTimeDifference.arrivalSeconds}s</li>}
                 </ul>
             </div>
             }
