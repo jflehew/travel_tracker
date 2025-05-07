@@ -10,22 +10,24 @@ export const Login = () => {
         email: "",
         password: ""
     })
-    const [error, setError] = useState("")
+    const [errors, setErrors] = useState({})
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData({ ...formData, [e.target.name]: e.target.value })
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
         try {
             const data = await loginUser(formData);
-            setUser(data);
-            setLoading(false);
-            navigate("/dashboard");
+            setUser(data)
+            setLoading(false)
+            navigate("/dashboard")
         } catch (err) {
-            setError(err.message || "Login Failed");
-            console.log(err.message);
+            Object.entries(err.errors).forEach(([field, message]) => {
+                setErrors((prev) => ({ ...prev, [field]: message }))
+            })
+            console.log(err)
         }
     };
 
@@ -57,7 +59,9 @@ export const Login = () => {
                         </label>
                     </div>
                     <div className="error-container text-center">
-                        {error && <p>{error}</p>}
+                        
+                        {errors.password && <p>{errors.password}</p>}
+                        {errors.email && <p>{errors.email}</p>}
                     </div>
                     <button type="submit">Login</button>
                 </form>
