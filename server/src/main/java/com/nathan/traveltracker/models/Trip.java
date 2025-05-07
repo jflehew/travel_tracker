@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nathan.traveltracker.validators.FutureDate;
 
 import java.util.Date;
@@ -25,28 +26,35 @@ public class Trip {
     @NotEmpty(message="Departure Location is required!")
     private String departureLocation;
 
+    @NotNull(message="Departure Location ID is required")
+    private String departureLocationId;
+
     @NotEmpty(message="Destination is required!")
     private String arrivalLocation;
 
-    @NotEmpty(message = "API ID is Required")
-    private String apiID;
+    @NotNull(message="arrival Location ID is required")
+    private String arrivalLocationId;
+
+    @NotNull(message = "Duration is required")
+    private Integer duration;
 
     @FutureDate(message = "Departure date must be in the future")
     @NotNull(message = "Deaparture Time is Required")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date departureDate;
 
     @NotNull(message= "Arrival Time is Required.")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX", timezone = "UTC")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date arrivalDate;
 
-    @NotEmpty(message = "Route Name is Required")
-    private String routeName;
+    @NotNull(message = "Line is Required")
+    private String line;
 
-    @NotEmpty(message = "Status is required")
-    private String status;
+    @NotNull(message = "Line Name is Required")
+    private String lineName;
 
-    // Auto-Populate Timestamps for Create and Update
     @PrePersist
     protected void onCreate() {
         this.createdAt = new Date();
@@ -63,7 +71,6 @@ public class Trip {
 
     @Transient
     private Long userId;
-    //Getters and Setters
 
     public Long getUserId() {
         return userId;
@@ -105,6 +112,14 @@ public class Trip {
         this.departureLocation = departureLocation;
     }
 
+    public String getDepartureLocationId() {
+        return departureLocationId;
+    }
+
+    public void setDepartureLocationId(String departureLocationId){
+        this.departureLocationId = departureLocationId;
+    }
+
     public String getArrivalLocation() {
         return arrivalLocation;
     }
@@ -113,12 +128,20 @@ public class Trip {
         this.arrivalLocation = arrivalLocation;
     }
 
-    public String getApiID() {
-        return apiID;
+    public String getArrivalLocationId() {
+        return arrivalLocationId;
     }
 
-    public void setApiID(String apiID) {
-        this.apiID = apiID;
+    public void setArrivalLocationId(String arrivalLocationId){
+        this.arrivalLocationId = arrivalLocationId;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
     }
 
     public Date getDepartureDate() {
@@ -137,20 +160,12 @@ public class Trip {
         this.arrivalDate = arrivalDate;
     }
 
-    public String getRouteName() {
-        return routeName;
+    public String getLine() {
+        return line;
     }
 
-    public void setRouteName(String routeName) {
-        this.routeName = routeName;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public void setLine(String line) {
+        this.line = line;
     }
 
     public User getUser() {
@@ -159,6 +174,14 @@ public class Trip {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getLineName() {
+        return lineName;
+    }
+
+    public void setLineName(String lineName) {
+        this.lineName = lineName;
     }
 
 
