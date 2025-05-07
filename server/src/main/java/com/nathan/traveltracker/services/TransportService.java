@@ -40,8 +40,6 @@ public class TransportService {
                 .buildAndExpand(lineId)
                 .toUriString();
         List<Map<String, Object>> response = restTemplate.getForObject(url, List.class);
-        // System.out.println(new ObjectMapper().writeValueAsString(response));
-        // return (List<Map<String, Object>>) response.get("stopPoints");
         return response;
     }
 
@@ -55,20 +53,4 @@ public class TransportService {
         return lines;
     }
 
-    // static class LineRoute {
-    //     public String name;
-    //     public List<RouteSection> routeSections;
-    // }
-
-    // static class RouteSection {
-    //     public List<StationInterval> stationIntervals;
-    // }
-
-    // static class StationInterval {
-    //     public List<StopPoint> stopPoints;
-    // }
-
-    // static class StopPoint {
-    //     public String name;
-    // }
 }

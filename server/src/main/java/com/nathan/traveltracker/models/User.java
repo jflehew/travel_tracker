@@ -50,7 +50,6 @@ public class User {
     @NotEmpty(message="Confirm Password is required!")
     private String confirmPassword;
 
-    // Auto-Populate Timestamps for Create and Update
     @PrePersist
     protected void onCreate() {
         this.createdAt = new Date();
@@ -61,7 +60,6 @@ public class User {
         this.updatedAt = new Date();
     }
 
-// ONE TO MANY
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
         private List<Trip> trips;
 
@@ -131,7 +129,6 @@ public class User {
         this.lastName = lastName;
     }
 
-    //ONE TO MANY GETTER/SETTER
     public List<Trip> getTrips() {
         return trips;
     }
