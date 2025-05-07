@@ -75,7 +75,7 @@ export const TravelView = () => {
             </div>
             :
             <div className="view-container">
-                <h2>Your Trip:</h2>
+                <h2 className="underline font-bold text-4xl">Your Trip:</h2>
                 <ul>
                     <li>Departure Location: {trip.departureLocation}</li>
                     <li>Arrival Location: {trip.arrivalLocation}</li>
@@ -84,8 +84,8 @@ export const TravelView = () => {
                     <li>Expected Duration: {trip.duration} Minutes</li>
                     <li>Departure Location: {trip.departureLocation}</li>
                     <li>Line: {trip.lineName}</li>
-                    {trip.status === "FUTURE" && <li>{departureTimeDifference.departureHours}h {departureTimeDifference.departureMinutes}m  {departureTimeDifference.departureSeconds}s</li>}
-                    {trip.status === "PRESENT" && <li>{arrivalTimeDifference.arrivalHours}h {arrivalTimeDifference.arrivalMinutes}m {arrivalTimeDifference.arrivalSeconds}s</li>}
+                    {trip.status === "FUTURE" && <li>Time to departure:{departureTimeDifference.departureHours}h {departureTimeDifference.departureMinutes}m  {departureTimeDifference.departureSeconds}s</li>}
+                    {trip.status === "PRESENT" && <li>Time to arrival: {arrivalTimeDifference.arrivalHours}h {arrivalTimeDifference.arrivalMinutes}m {arrivalTimeDifference.arrivalSeconds}s</li>}
                 </ul>
             </div>
             }
