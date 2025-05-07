@@ -146,17 +146,17 @@
   border-metallic-white
   max-h-[70vh]
   font-modern
+  font-semibold
   text-center
-  mx-14
+  m-14
   shadow-metallic
 }
 
 .table-container table {
   @apply
   text-center
+  border-l-4
   text-metallic-silver
-  border-8
-
   bg-metallic-forest
   overflow-hidden
 }
@@ -165,16 +165,19 @@
   @apply
   text-lg
   underline
-  border-4
-  border-metallic-white
   h-24
+  border-b-4
 }
 
 .table-container table > tbody > tr {
   @apply
-  border-4
-  border-metallic-white
   h-16
+  border-b-4
+}
+
+.table-container table > tbody > tr:last-child{
+  @apply 
+  border-b-0;
 }
 
 .table-container table > tbody > tr > td{
@@ -185,6 +188,24 @@
 .table-container table > thead > tr > td{
   @apply
   w-60
+}
+
+.table-container table > tbody > tr > td > button{
+  @apply
+  flex
+  bg-metallic-white
+  justify-center
+  items-center
+  text-metallic-forest
+  font-bold
+  underline
+  text-xl
+  shadow-deep
+  rounded-md
+  py-1
+  px-5
+  m-4
+  mx-auto
 }
 
 .view-container{
@@ -209,6 +230,33 @@
 .view-container ul > li{
   @apply
   my-3
+}
+
+.table-controls {
+  @apply
+    flex
+    flex-col
+    items-center
+    justify-center
+    gap-4
+    p-4
+    bg-metallic-forest
+    w-[40vw]
+    border-r-4
+}
+
+.table-controls select,
+.table-controls .search-button {
+  @apply
+    p-2
+    rounded-xl
+    border-2
+    border-metallic-forest
+    bg-metallic-white
+    text-metallic-forest
+    font-modern
+    font-bold
+    shadow-md;
 }
 
 
